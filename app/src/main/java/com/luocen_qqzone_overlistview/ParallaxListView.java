@@ -22,9 +22,11 @@ public class ParallaxListView extends ListView {
         super(context, attrs);
         mImageViewHeight=context.getResources().getDimensionPixelSize(R.dimen.header_height);
     }
+    //背景图片拉伸
     public void setZoomImageView(ImageView iv){
         mImageView=iv;
     }
+    //头像旋转
     public void setHeaderImageView(ImageView iv){
         mHeaderImageView=iv;
     }
@@ -40,11 +42,13 @@ public class ParallaxListView extends ListView {
         if(deltaY<0){ //下拉过度  对图片进行放大
            mImageView.getLayoutParams().height=mImageView.getHeight()-deltaY;
            mImageView.requestLayout();
+           //头像的旋转
            mHeaderImageView.setRotation(mHeaderImageView.getRotation()-deltaY);
         }else{//一种特殊情况：当放大后的mImageView.height+listview.height=屏幕高度时，再往上推时，会触发上拉过度，而不会调用onScrollChanged中的缩小方法
             if(mImageView.getHeight()>mImageViewHeight) {
                 mImageView.getLayoutParams().height = mImageView.getHeight() - deltaY;
                 mImageView.requestLayout();
+                //头像的旋转
                 mHeaderImageView.setRotation(mHeaderImageView.getRotation()-deltaY);
             }
         }
@@ -56,6 +60,7 @@ public class ParallaxListView extends ListView {
         //让ImageView上滑时缩小，监听
         View header = (View) mImageView.getParent();
         if(header.getTop()<0 && mImageView.getHeight()>mImageViewHeight){
+            //头像的旋转
             mHeaderImageView.setRotation(mHeaderImageView.getRotation() + header.getTop());
             mImageView.getLayoutParams().height=mImageView.getHeight()+header.getTop();
             header.layout(header.getLeft(),0,header.getRight(),header.getHeight());
@@ -91,8 +96,10 @@ public class ParallaxListView extends ListView {
             //减小ImageView的高度
             mImageView.getLayoutParams().height= (int) (currentHeight-delay*interpolatedTime);
             mImageView.requestLayout();
+            //头像的旋转
             int rotation= (int) (mHeaderRotation+(mHeaderDestRotation-mHeaderRotation)*interpolatedTime);
             mHeaderImageView.setRotation(rotation);
+
             super.applyTransformation(interpolatedTime, t);
         }
     }
